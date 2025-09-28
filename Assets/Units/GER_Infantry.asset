@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cd4cf5c275167a4b8257f21ec211cf4, type: 3}
+  m_Name: GER_Infantry
+  m_EditorClassIdentifier: 
+  unitName: Inf.
+  unitPrefab: {fileID: 3104687439876361629, guid: f0fb80586e6ed5b4b880e4e8ed88864e, type: 3}
+  faction: 1
+  doctrineTag: 0
+  rationCost: 2
+  maxModels: 4
+  movementSpeed: 2
+  maxActionsPerTurn: 2
+  attackRange: 3
+  hitChance: 0.1
+  suppressionChance: 0.15
