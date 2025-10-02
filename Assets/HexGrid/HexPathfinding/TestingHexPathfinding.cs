@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using UnityEngine;
 using CM_Pathfinding;
+using UnityEngine;
+using static SpawnConfig;
 
 public class TestingHexPathfinding : MonoBehaviour
 {
@@ -13,6 +14,15 @@ public class TestingHexPathfinding : MonoBehaviour
     private readonly List<Unit> germanUnits = new();
     private readonly List<Unit> polishUnits = new();
     private Unit _selectedUnit;
+    [Header("Reinforcement settings")]
+    [SerializeField] SpawnEntry polishReinforcement;
+    [SerializeField] int reinforcementRate = 3;
+    [SerializeField] Vector2Int topSpawn;
+    [SerializeField] Vector2Int botSpawn;
+    bool shouldTopSpawn = true;
+    int turnCount = 0;
+
+
     private Faction currentPlayerTurn = Faction.Germany;
 
     private class GridObject
@@ -63,7 +73,7 @@ public class TestingHexPathfinding : MonoBehaviour
     void RemoveUnitFromList(Unit unitToRemove)
     {
         unitToRemove.onUnitDestroyed -= RemoveUnitFromList;
-        if(unitToRemove.Faction == Faction.Poland)
+        if (unitToRemove.Faction == Faction.Poland)
         {
             polishUnits.Remove(unitToRemove);
         }
@@ -81,6 +91,32 @@ public class TestingHexPathfinding : MonoBehaviour
 
         foreach (Unit unit in GetUnitsFor(currentPlayerTurn))
             unit.ResetTurn();
+
+        turnCount++;
+        if (turnCount % reinforcementRate == 0)
+        {
+            turnCount = 0;
+            if (shouldTopSpawn)
+            {
+                SpawnReinforcementUnitAt(topSpawn);
+            }
+            else
+            {
+                SpawnReinforcementUnitAt(botSpawn);
+            }
+            shouldTopSpawn = !shouldTopSpawn;
+        }
+    }
+
+    private void SpawnReinforcementUnitAt(Vector2Int position)
+    {
+        Debug.LogWarning($"SPAWNING AT {position}");
+        GameObject prefabGO = Instantiate(polishReinforcement.config.unitPrefab);
+        Unit unit = prefabGO.GetComponent<Unit>();
+        unit.Init(polishReinforcement.config);
+        unit.onUnitDestroyed += RemoveUnitFromList;
+        unit.PlaceOn(pathfindingHexXZ.GetGrid(), position, 0);
+        polishUnits.Add(unit);
     }
 
     private void DeselectUnit()
